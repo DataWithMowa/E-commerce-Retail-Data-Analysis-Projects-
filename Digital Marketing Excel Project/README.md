@@ -90,7 +90,7 @@ To build the final dashboard, I broke down the raw data using these targeted piv
 
 Thank you for taking the time to go through this project! If you have any questions or feedback, please reach out directly:
 
-* 💼 **LinkedIn:** [Mowaninuola Umarudeen](https://linkedin.com)
+* 💼 **LinkedIn:** [Mowaninuola Umarudeen](https://www.linkedin.com/in/mowaninuolaumarudeen/)
 * 📧 **Email:** [mowatheanalyst@gmail.com](mailto:mowatheanalyst@gmail.com)
 
 *📈 **Did you find this useful?** Consider giving this repository a ⭐ **Star** if it helped you!*
