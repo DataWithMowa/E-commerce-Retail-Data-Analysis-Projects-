@@ -14,7 +14,7 @@ See the dashboard filters, dynamic metrics, and charts in action below (30-secon
 
 https://github.com/user-attachments/assets/6f3a66dc-2c89-4a42-b157-90598be464f7
 
-To see the full live analysis: [Click here](https://lnkd.in/p/evUYQ7PB)
+### To see the full live analysis: [Click here](https://lnkd.in/p/evUYQ7PB)
 
 ### 💡 Key Data Insights & Discoveries
 
