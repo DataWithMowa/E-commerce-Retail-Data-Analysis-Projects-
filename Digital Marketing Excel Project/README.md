@@ -14,6 +14,8 @@ See the dashboard filters, dynamic metrics, and charts in action below (30-secon
 
 https://github.com/user-attachments/assets/6f3a66dc-2c89-4a42-b157-90598be464f7
 
+To see the full live analysis: [Click here](https://lnkd.in/p/evUYQ7PB)
+
 ### 💡 Key Data Insights & Discoveries
 
 1. **Drastic Performance Gaps Across Channels:** Not all marketing channels are created equal. The youtube_blogger influencer campaign was highly profitable—returning **₹2.77 for every ₹1 spent**. Conversely, the facebook_lal (Lookalike) social campaign was a major loss leader, **wasting 89% of its allocated budget**.
