@@ -101,7 +101,8 @@ To build the final dashboard, I broke down the raw data using these targeted piv
 
 1. You can download the full file here: [Retails_Sales_Dashboard.xlsx](https://github.com/DataWithMowa/E-commerce-Retail-Data-Analysis-Projects-/tree/main/Retail%20Sales%20%26%20Customer%20Demographic%20Excel%20Project/Full%20Project)
 2. Open the file locally using **Microsoft Excel desktop**.
-3. Use the floating menu slicers on the right side of the dashboard layout to filter the charts dynamically.
+3. Go to the **Dashboard** Sheet.
+4. Use the floating menu slicers on the right side of the dashboard layout to filter the charts dynamically.
 
 ### 🤝 Connect & Support
 
