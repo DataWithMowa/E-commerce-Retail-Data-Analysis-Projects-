@@ -8,14 +8,6 @@ This project was built to understand **customer spending and buying patterns acr
 
 Using Excel, I cleaned and analyzed the data, calculated key metrics, and built an interactive dashboard to explore **customer behaviour, product performance, revenue, and Average Order Value (AOV)**.
 
-A few insights that stood out:
-
-1️⃣ Customers who bought exactly **4 items generated over 40% of total revenue ($185K+)**.
-
-2️⃣ **Men aged 36–50** had the highest average order value for Beauty products at **$578**.
-
-3️⃣ **Clothing performed strongly in Spring and Summer**, while Electronics saw a major increase in **Q4**.
-
 The analysis also explored:
 
 * Which customers spend the most on Beauty products.
@@ -27,42 +19,43 @@ I built the dashboard completely in **Excel**, using data to understand customer
 
 ### 🕹️ Interactive Dashboard Demo
 
-See the dashboard filters, dynamic metrics, and charts in action below (30-second walkthrough): 
+See the dashboard filters, dynamic metrics, and charts in action below (16-second walkthrough): 
 
+https://github.com/user-attachments/assets/7453e9af-b589-4f5a-bcb7-c875a1215ab3
 
-
-### To see the full live analysis: [Click here](https://lnkd.in/p/evUYQ7PB)
+### To see the full live analysis: [Click here](https://lnkd.in/p/ebRSbzu4)
 
 ### 💡 Key Data Insights & Discoveries
 
-1. **Drastic Performance Gaps Across Channels:** Not all marketing channels are created equal. The youtube_blogger influencer campaign was highly profitable—returning **₹2.77 for every ₹1 spent**. Conversely, the facebook_lal (Lookalike) social campaign was a major loss leader, **wasting 89% of its allocated budget**.
-2. **Tier 2 Cities Dominate Efficiency:** Geographically, Tier 2 locations heavily out-earned Tier 1 zones, demonstrating both higher scale and better efficiency with a **41.19% True ROMI** (Return on Marketing Investment) compared to **35.29%** for Tier 1.
-3. **Weekdays Outperform Weekends:** Conversion behavior shifts noticeably across the week. Weekdays generated higher ad engagement and activity, bringing in a higher average revenue of **₹141,914** compared to **₹132,593** on weekends.
+1. **Customers Buying 4 Items Drive Major Revenue:** Customers who purchased exactly **4 items generated over 40% of total revenue ($185K+)**, highlighting a strong revenue contribution from this customer group.
+2. **Men Aged 36–50 Lead Beauty AOV:** Men aged **36–50** recorded the highest Average Order Value for Beauty products at **$578**, showing a strong spending pattern within this demographic.
+3. **Seasonality Differs by Product Category:** **Clothing performed strongly during Spring and Summer**, while **Electronics experienced a major increase in Q4**, revealing different seasonal purchasing patterns across product categories.
 
 ### 🛠️ Excel Skills & Dashboard Setup
 
-To turn raw data into clear business insights, I built this dashboard using advanced Excel features and clean design practices:
+To turn 1,000 raw retail transactions into clear business insights, I used Excel's data analysis, visualization, and interactive dashboard features:
 
-* **Key Metric Tracking:** Wrote specific calculated fields to automatically calculate vital performance numbers, such as Overall ROMI (40.2%) and Average Order Value (₹5,332.51).
-  
-<img width="375" height="248" alt="image" src="https://github.com/user-attachments/assets/99920e53-bce0-4db3-91e8-5d4267795321" />
+* **Data Cleaning & Preparation:** Cleaned and organized the raw transaction data to make it suitable for analysis and dashboard reporting.
 
-* **Smart Chart Design:** Constructed dynamic combo charts (Clustered Columns paired with Secondary Axis Lines) to cleanly isolate the relationship between traffic spikes, order counts, and structural revenue trends.
+* **Key Metric Tracking:** Created KPI cards to highlight important business metrics, including **Total Transactions (1,000), Total Units Sold (2,514), Total Revenue ($456K), Average Price Per Unit ($180), Average Order Value ($456), and Average Revenue Per Day ($1,249).**
 
-<img width="375" height="248" alt="image" src="https://github.com/user-attachments/assets/22791ef8-9d5b-4b5c-881d-650465ca5f87" />
+<img width="805" height="51" alt="image" src="https://github.com/user-attachments/assets/f1580bc4-cdf7-4fb6-9cac-724011fa562b" />
 
-* **Interactive Filters:** Added easy-to-use slicers (Day Type, Campaign Name, Location) so anyone can click around and filter the data by region or ad spend instantly.
+* **Combo Chart Analysis:** Used **combination charts with columns and lines** to compare multiple measures and explore relationships between customer spending, product categories, gender, and age groups.
 
-<img width="112" height="461" alt="image" src="https://github.com/user-attachments/assets/ed03e2b0-94b4-472b-be3e-ff08b92d5811" />
+<img width="681" height="376" alt="image" src="https://github.com/user-attachments/assets/13e821f6-a793-4670-ba2a-3f548dd9883a" />
+
+* **Interactive Slicers:** Added slicers for **Age Group, Year, Quarter, and Month**, allowing users to interactively filter the dashboard and explore specific customer segments and periods.
+
+<img width="139" height="455" alt="image" src="https://github.com/user-attachments/assets/0708bac0-a1b9-4d20-912d-8b8b0fd7fc62" />
 
 ### 📈 Strategic Recommendations & Next Steps
 
-Based on the data trends shown in the dashboard, the business should immediately make these three strategic shifts:
+* **Target Customers by Value:** Focus youth marketing on **ages 18–35** for volume, while promoting premium beauty and electronics to **older high-spending customers**.
 
-* **Smart Budget Reallocation:** Stop spending money on low-performing social media channels (like `facebook_lal` and `instagram_tier2`). Instead, move those funds directly into high-performing campaigns like `youtube_blogger`.
-* **Focus on Key Regions:** Direct a larger share of the advertising budget toward **Tier 2 cities** to capture higher profit margins and better returns.
-* **Optimize Campaign Timing:** Increase ad spend and daily budgets on **Weekdays** to match up perfectly with the days when customers are historically buying the most.
-Use code with caution.
+* **Plan Around Seasonal Demand:** Increase clothing stock early in the year, push major campaigns in **May**, and stock up on beauty and electronics ahead of the **holiday season**.
+
+* **Increase Basket Size:** Use **“Buy 3, Get 1 Free”** offers and checkout add-ons, especially for electronics, to encourage customers to purchase more per transaction.
 
 ### 📊 Behind the Data: Pivot Table Breakdown
 
@@ -72,36 +65,41 @@ Use code with caution.
 
 To build the final dashboard, I broke down the raw data using these targeted pivot tables and charts:
 
-#### 1. Overall Return & Campaign Performance
-*Shows the overall project return (40.2%) and ranks individual campaigns from highest profit to lowest.*
+### 1. Customer Age & Gender vs Purchasing Behavior
+*Breaks down revenue and average spend by gender, age group, and product type (Beauty, Clothing, Electronics), to show how age and gender shape buying habits.*
 
-<img src="Assets/Pivot 1 & 2.png" width="800" alt="Overall and Campaign ROI Analysis" />
+<img width="1554" height="896" alt="Screenshot 2026-09-26 131144" src="https://github.com/user-attachments/assets/4b0bf5b6-b4c7-4db6-a0c2-2ee149353cbb" />
 
-#### 2. Daily Revenue vs. Marketing Spend
-*Tracks total revenue compared directly against ad spend for each day in February to find peak sales dates.*
+#### 2. Sales Patterns Across Time
+*Tracks monthly and quarterly revenue through 2023 into early 2024, to spot trends and seasonal patterns.*
 
-<img src="Assets/Pivot 3.png" width="800" alt="Daily Revenue and Ad Spend Trends" />
+<img width="572" height="337" alt="image" src="https://github.com/user-attachments/assets/3ca21ffd-d95b-40aa-8afc-be5b7e46685f" />
 
-#### 4. Daily Conversion Rates
-*Monitors the exact percentage of website traffic that successfully turned into completed orders each day.*
+### 3. Product Category Demand
+*Compares total quantity purchased across Beauty, Clothing, and Electronics, to identify which product categories attract the highest customer demand.*
 
-<img src="Assets/Pivot 4.png" width="800" alt="Conversion Rates By Date" />
+<img width="571" height="218" alt="image" src="https://github.com/user-attachments/assets/ddd635a6-779c-4ce6-93c5-b450872a3d60" />
 
-#### 4. Timing Strategy & Campaign Categories
-*The top chart compares sales activity on weekdays versus weekends. The bottom chart groups performance by channel type (Influencer, Media, Search, Social).*
+#### 4. Age, Spending & Product Preferences
+*Compares average order value across age groups and product categories to show how spending patterns and product preferences vary by age.*
 
-<img src="Assets/Pivot 5 & 6.png" width="800" alt="Day Type and Campaign Category Analysis" />
+<img width="571" height="365" alt="image" src="https://github.com/user-attachments/assets/b73a04b9-6ff7-425c-8ca5-ba0b2bcb5bd3" />
 
-#### 5. Location Performance (Tier 1 vs. Tier 2 Cities)
-*Compares total sales value and return percentages between different city tiers, proving that Tier 2 areas bring in higher profits.*
+### 5. Shopping Habits by Seasonal Trends
+*Compares quarterly units sold across Beauty, Clothing, and Electronics over time to identify seasonal purchasing patterns and shifting product category demand throughout the year.*
 
-<img src="Assets/Pivot 7.png" width="800" alt="Geographical Performance Analysis" />
+<img width="727" height="262" alt="image" src="https://github.com/user-attachments/assets/e6ca70b9-841d-41ef-903c-8dd0ed6300ec" />
+
+### 6. Purchasing Behavior by Transaction Size
+*Compares total revenue across Beauty, Clothing, and Electronics based on the number of items bought per transaction to identify how basket size impacts overall revenue trends for each category.*
+
+<img width="818" height="260" alt="image" src="https://github.com/user-attachments/assets/fefebad6-6d2a-44bd-9bb4-2483e6419b7d" />
 
 </details>
 
 ### 📂 How to Open and Explore the Workbook
 
-1. You can download the full file here: [Q1_Digital_Marketing_Performance.xlsx](https://github.com/DataWithMowa/E-commerce-Retail-Data-Analysis-Projects-/tree/main/Digital%20Marketing%20Excel%20Project/Full%20Project)
+1. You can download the full file here: [Retails_Sales_Dashboard.xlsx](https://github.com/DataWithMowa/E-commerce-Retail-Data-Analysis-Projects-/tree/main/Retail%20Sales%20%26%20Customer%20Demographic%20Excel%20Project/Full%20Project)
 2. Open the file locally using **Microsoft Excel desktop**.
 3. Use the floating menu slicers on the right side of the dashboard layout to filter the charts dynamically.
 
