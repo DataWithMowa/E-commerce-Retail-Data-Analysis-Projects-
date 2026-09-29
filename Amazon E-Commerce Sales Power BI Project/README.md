@@ -1,6 +1,6 @@
 # Amazon E-commerce Sales Dashboard
 
-<img width="640" height="342" alt="Amazon ecommerce Sales " src="https://github.com/user-attachments/assets/bb21ed4e-c6e6-4463-84dd-de45ec31a6c3" />
+<img width="942" height="500" alt="Amazon ecommerce Sales " src="https://github.com/user-attachments/assets/bb21ed4e-c6e6-4463-84dd-de45ec31a6c3" />
 
 ### 📊 Project Overview
 
@@ -19,89 +19,104 @@ I built the dashboard completely in **Power BI**, using data to look beyond "Wha
 
 ### 🕹️ Interactive Dashboard Demo
 
-See the dashboard filters, dynamic metrics, and charts in action below (16-second walkthrough): 
+See the dashboard filters, dynamic metrics, and charts in action below (31-second walkthrough): 
 
+https://github.com/user-attachments/assets/81530ff8-2165-4f2b-b1e0-98b5c2c75394
 
-
-### To see the full live analysis: [Click here](https://lnkd.in/p/ebRSbzu4)
+### To see the full live analysis: [Click here](https://lnkd.in/p/ehQUjN4E)
 
 ### 💡 Key Data Insights & Discoveries
 
-1. **Customers Buying 4 Items Drive Major Revenue:** Customers who purchased exactly **4 items generated over 40% of total revenue ($185K+)**, highlighting a strong revenue contribution from this customer group.
-2. **Men Aged 36–50 Lead Beauty AOV:** Men aged **36–50** recorded the highest Average Order Value for Beauty products at **$578**, showing a strong spending pattern within this demographic.
-3. **Seasonality Differs by Product Category:** **Clothing performed strongly during Spring and Summer**, while **Electronics experienced a major increase in Q4**, revealing different seasonal purchasing patterns across product categories.
+1. **Premium Products Drive Most of the Revenue:** **Higher-priced products brought in the majority of total revenue**, showing that expensive items carry a big share of sales.
+2. **Higher Price Does Not Mean Higher Rating:** **Products with higher prices did not automatically get better ratings**, so paying more does not always mean customers are happier.
+3. **Simple, Everyday Products Earned Some of the Best Ratings:** Some **basic, low-cost products received some of the strongest ratings**, showing that customers value products that do their job well.
+4. **Most Reviewed Does Not Mean Best Rated:** **Categories with the most reviews were not always the highest rated**, so a lot of reviews does not always mean a lot of satisfaction.
+5. **Electronics Led in Total Discounts:** **Electronics offered the highest total discounts**, which may point to strong competition and its effect on pricing.
 
-### 🛠️ Excel Skills & Dashboard Setup
+### 🛠️ Power BI Skills & Dashboard Setup
 
-To turn 1,000 raw retail transactions into clear business insights, I used Excel's data analysis, visualization, and interactive dashboard features:
+To turn 1,465 raw Amazon product rows from one flat CSV file into clear business insights, I used Power BI's data cleaning, data modeling, DAX, and dashboard features:
 
-* **Data Cleaning & Preparation:** Cleaned and organized the raw transaction data to make it suitable for analysis and dashboard reporting.
+* **Data Cleaning & Preparation (Power Query):** Loaded the single `Amazon Sales.csv` file and cleaned it before building anything.
+  * Removed the **₹** symbol from `discounted_price` and `actual_price` and changed both to currency
+  * Removed the **%** sign from `discount_percentage`, divided it by 100, and set it as a percentage
+  * Replaced error values in `rating` and `rating_count` with 0 and fixed the data types
+  * Removed duplicate rows using `product_id`, `user_id`, and `review_id`
+  * Split the long `category` column (it used `|` between levels) into **Product Category** and **Sub Category**
 
-* **Key Metric Tracking:** Created KPI cards to highlight important business metrics, including **Total Transactions (1,000), Total Units Sold (2,514), Total Revenue ($456K), Average Price Per Unit ($180), Average Order Value ($456), and Average Revenue Per Day ($1,249).**
+* **Data Modeling (Star Schema):** The whole project came from only one dataset. I kept the raw file as a staging table (`Amazon_Sales Real`) and split it into one fact table and three dimension tables so the model is clean and easy to filter.
 
-<img width="805" height="51" alt="image" src="https://github.com/user-attachments/assets/f1580bc4-cdf7-4fb6-9cac-724011fa562b" />
+| Table | Type | What it holds |
+|---|---|---|
+| **Fact Sales** | Fact | `product_id`, `user_id`, `review_id`, `discounted_price`, `actual_price`, `discount_percentage`, `rating`, and a calculated `Price Tier` column |
+| **Dim_Product** | Dimension | `product_id`, `product_name`, `about_product`, `product_link`, `img_link`, `Product Category`, `Sub Category` |
+| **Dim_User** | Dimension | `user_id`, `user_name` |
+| **Dim_Review** | Dimension | `review_id`, `review_title`, `review_content`, `rating_count` |
 
-* **Combo Chart Analysis:** Used **combination charts with columns and lines** to compare multiple measures and explore relationships between customer spending, product categories, gender, and age groups.
+<img width="863" height="367" alt="image" src="https://github.com/user-attachments/assets/a0bb93c4-483c-4b95-a8ca-6e88c777ebad" />
 
-<img width="681" height="376" alt="image" src="https://github.com/user-attachments/assets/13e821f6-a793-4670-ba2a-3f548dd9883a" />
+* **Relationships:** Connected the fact table to each dimension with **one-to-many** relationships: `Fact Sales[product_id]` → `Dim_Product`, `Fact Sales[user_id]` → `Dim_User`, and `Fact Sales[review_id]` → `Dim_Review`.
 
-* **Interactive Slicers:** Added slicers for **Age Group, Year, Quarter, and Month**, allowing users to interactively filter the dashboard and explore specific customer segments and periods.
+* **Price Tier Column:** Created a calculated column that groups every product into **Budget (<500), Mid-Range (500–2K), or Premium (>2K)**. This powers the Price Tier slicer and the Pricing Tier Segmentation donut.
 
-<img width="139" height="455" alt="image" src="https://github.com/user-attachments/assets/0708bac0-a1b9-4d20-912d-8b8b0fd7fc62" />
+<img width="682" height="59" alt="image" src="https://github.com/user-attachments/assets/f1487819-fc04-4ca3-aa9d-5e70b9f1eff4" />
+
+* **DAX Measures:** Kept all measures in one dedicated `Measures` table so they are easy to find:
+
+<img width="244" height="244" alt="image" src="https://github.com/user-attachments/assets/dfdadd4f-6d6d-404c-8fc1-078c4700173d" />
+
+| Measure | DAX |
+|---|---|
+| **Total Revenue** | `SUM('Fact Sales'[discounted_price])` |
+| **Total Actual Price** | `SUM('Fact Sales'[actual_price])` |
+| **Total Discount** | `[Total Actual Price] - [Total Revenue]` |
+| **Average Order Value** | `AVERAGE('Fact Sales'[discounted_price])` |
+| **Average Actual Price** | `AVERAGE('Fact Sales'[actual_price])` |
+| **Average Discounted Price** | `AVERAGE('Fact Sales'[discounted_price])` |
+| **Average Rating** | `AVERAGE('Fact Sales'[rating])` |
+| **Total Reviews** | `COUNT('Fact Sales'[review_id])` |
+| **Total Reviews Volume** | `SUM(Dim_Review[rating_count])` |
+| **Average Reviews Per Product** | `AVERAGE(Dim_Review[rating_count])` |
+| **User Engagement Count** | `DISTINCTCOUNT(Dim_Review[review_id])` |
+
+* **Key Metric Tracking:** Created KPI cards to highlight the main business numbers, including **Total Revenue (₹5M), Total Actual Price (₹8M), Average Order Value (₹3K), Average Rating (4.1), Total Reviews (1K), and Total Discount (₹3.40M).**
+
+You can find the image on the dashboard
+
+* **Chart Analysis:** Used a **scatter chart** to test if higher prices really mean better ratings, a **category performance table** to compare review volume and rating by product category, and a **donut chart** to show how revenue splits across Budget, Mid-Range, and Premium products.
+
+* **Interactive Toggle Button (Bookmarks):** Added **Product / Category** buttons on the Total Discount visual, so one space can switch between a discount-by-category bar chart and a **Product Image Table**. For the table, I set `img_link` to **Image URL** and `product_link` to **Web URL**, so the product pictures and clickable links show inside the dashboard.
+
+<img width="500" height="300" alt="image" src="https://github.com/user-attachments/assets/5537bc57-0358-48dd-8ce2-61272ac140af" />
+
+* **Interactive Slicer:** Added a **Price Tier** slicer, letting users filter the whole dashboard by Budget, Mid-Range, or Premium products.
+
+<img width="150" height="100" alt="image" src="https://github.com/user-attachments/assets/48e7ceb9-1b97-4ee1-a076-bca86976925c" />
 
 ### 📈 Strategic Recommendations & Next Steps
 
-* **Target Customers by Value:** Focus youth marketing on **ages 18–35** for volume, while promoting premium beauty and electronics to **older high-spending customers**.
+* **Don't put all the eggs in the Premium basket:** Almost all the money (90.84%) comes from Premium products, but they're not rated any better than cheap ones. Push Budget and Mid-Range products more instead of only relying on high prices.
 
-* **Plan Around Seasonal Demand:** Increase clothing stock early in the year, push major campaigns in **May**, and stock up on beauty and electronics ahead of the **holiday season**.
+* **Watch the discounts on Electronics:** Electronics gets the most reviews, but it also gets the most discounts. Check if all that discounting is really needed, or if it's just cutting into profit for no reason.
 
-* **Increase Basket Size:** Use **“Buy 3, Get 1 Free”** offers and checkout add-ons, especially for electronics, to encourage customers to purchase more per transaction.
+* **Look into why Car & Motorbike has low ratings:** This category has the lowest rating (3.8) even though it sells well. Find out what customers are unhappy about before it starts hurting the whole store's reputation.
 
-### 📊 Behind the Data: Pivot Table Breakdown
-
-<details>
-<summary><b>Click to expand and view individual Pivot Tables 🔍</b></summary>
-<br>
-
-To build the final dashboard, I broke down the raw data using these targeted pivot tables and charts:
-
-### 1. Customer Age & Gender vs Purchasing Behavior
-*Breaks down revenue and average spend by gender, age group, and product type (Beauty, Clothing, Electronics), to show how age and gender shape buying habits.*
-
-<img width="1554" height="896" alt="Screenshot 2026-09-26 131144" src="https://github.com/user-attachments/assets/4b0bf5b6-b4c7-4db6-a0c2-2ee149353cbb" />
-
-#### 2. Sales Patterns Across Time
-*Tracks monthly and quarterly revenue through 2023 into early 2024, to spot trends and seasonal patterns.*
-
-<img width="572" height="337" alt="image" src="https://github.com/user-attachments/assets/3ca21ffd-d95b-40aa-8afc-be5b7e46685f" />
-
-### 3. Product Category Demand
-*Compares total quantity purchased across Beauty, Clothing, and Electronics, to identify which product categories attract the highest customer demand.*
-
-<img width="571" height="218" alt="image" src="https://github.com/user-attachments/assets/ddd635a6-779c-4ce6-93c5-b450872a3d60" />
-
-#### 4. Age, Spending & Product Preferences
-*Compares average order value across age groups and product categories to show how spending patterns and product preferences vary by age.*
-
-<img width="571" height="365" alt="image" src="https://github.com/user-attachments/assets/b73a04b9-6ff7-425c-8ca5-ba0b2bcb5bd3" />
-
-### 5. Shopping Habits by Seasonal Trends
-*Compares quarterly units sold across Beauty, Clothing, and Electronics over time to identify seasonal purchasing patterns and shifting product category demand throughout the year.*
-
-<img width="727" height="262" alt="image" src="https://github.com/user-attachments/assets/e6ca70b9-841d-41ef-903c-8dd0ed6300ec" />
-
-### 6. Purchasing Behavior by Transaction Size
-*Compares total revenue across Beauty, Clothing, and Electronics based on the number of items bought per transaction to identify how basket size impacts overall revenue trends for each category.*
-
-<img width="818" height="260" alt="image" src="https://github.com/user-attachments/assets/fefebad6-6d2a-44bd-9bb4-2483e6419b7d" />
-
-</details>
+* **Add dates to the data:** Right now there's no way to see trends over time. Adding order or review dates would show if the Premium tier is growing or shrinking, instead of just one snapshot.
 
 ### 📂 How to Open and Explore the Workbook
 
 1. You can download the full file here: [Retails_Sales_Dashboard.xlsx](https://github.com/DataWithMowa/E-commerce-Retail-Data-Analysis-Projects-/tree/main/Retail%20Sales%20%26%20Customer%20Demographic%20Excel%20Project/Full%20Project)
-2. Open the file locally using **Microsoft Excel desktop**.
-3. Use the floating menu slicers on the right side of the dashboard layout to filter the charts dynamically.
+2. Open the file locally using **Power BI desktop**.
+3. 3. Go to the **Dashboard** page.
+4. Use the Price Tier slicer on the top right side of the dashboard layout to filter the charts dynamically.
+
+### 📂 How to Open and Explore the Dashboard
+
+1. You can download the full file here: [Amazon_Ecommerce_Sales_Dashboard.pbix](https://github.com/DataWithMowa/E-commerce-Retail-Data-Analysis-Projects-/tree/main/Amazon%20E-Commerce%20Sales%20Power%20BI%20Project/Full%20Project)
+2. Open the file locally using Power BI Desktop.
+3. Go to the Dashboard page.
+4. Use the Price Tier slicer on the top right side of the dashboard to filter all the charts by Budget, Mid-Range, or Premium.
+5. Click the Product / Category buttons on the Total Discount visual to switch between the discount-by-category chart and the Product Image Table.
 
 ### 🤝 Connect & Support
 
