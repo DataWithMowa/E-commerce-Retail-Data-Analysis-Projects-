@@ -39,28 +39,30 @@ To turn 119,390 raw hotel booking rows from one Excel file into clear business i
 
 <img width="458" height="313" alt="image" src="https://github.com/user-attachments/assets/13e3379a-2591-4d0a-aba8-e34f588fea1f" />
 
-* **DAX Measures:** Kept all measures in one dedicated `Measures (2)` table so they are easy to find:
+### DAX Measures
 
-| Measure | DAX |
-|---|---|
-| **Total Bookings** | `COUNTROWS(hotel_booking)` |
-| **Total Travelers** | `CALCULATE(SUMX(hotel_booking, adults + children + babies), is_canceled = 0)` |
-| **Total Revenue** | `CALCULATE(SUMX(hotel_booking, adr * (stays_in_weekend_nights + stays_in_week_nights)), is_canceled = 0)` |
-| **Average Price (Night)** | `ROUND(AVERAGE(hotel_booking[adr]), 2)` |
-| **Average Nights** | `ROUND(CALCULATE(AVERAGEX(hotel_booking, stays_in_weekend_nights + stays_in_week_nights), is_canceled = 0), 2)` |
-| **Cancellation Rate** | `DIVIDE(CALCULATE([Total Bookings], is_canceled = 1), [Total Bookings])` |
-| **Countries Tracked** | `DISTINCTCOUNT(hotel_booking[country])` |
-| **Top Country** | Ranks countries by traveler count, returns the top one |
-| **Top Room Type** | Ranks room types by booking count, returns the top one |
-| **Top Month-Year (by Bookings)** | Ranks month-year combos by booking count, returns the top one |
-| **Top Month-Year (by Travelers)** | Ranks month-year combos by traveler count, returns the top one |
-| **Best Customer Type - Most Bookings** | Ranks customer types by booking count, returns the top one |
-| **Best Customer Type - Most Reliable** | Ranks customer types by cancellation rate (ascending), returns the lowest |
-| **Best Customer Type - Pays Most Per Night** | Ranks customer types by average `adr`, returns the top one |
-| **Largest Families** | Ranks customer types by combined children + babies, returns the top one |
-| **Market Segment With Highest Cancel Rate** | Ranks market segments (min. 50 bookings) by cancellation rate, returns the highest |
+Kept all measures in one dedicated `Measures (2)` table so they are easy to find:
 
-<img width="261" height="311" alt="image" src="https://github.com/user-attachments/assets/cf4b8a12-2491-492e-8481-7ec17b7dab4e" />
+| Measure | What it does | DAX |
+|---|---|---|
+| **Total Bookings** | Counts every row in the table | `COUNTROWS(hotel_booking)` |
+| **Total Travelers** | Counts adults, children, and babies for bookings that were not cancelled | `CALCULATE(SUMX(hotel_booking, hotel_booking[adults] + hotel_booking[children] + hotel_booking[babies]), hotel_booking[is_canceled] = 0)` |
+| **Total Revenue** | Room rate × nights stayed, for bookings that were not cancelled | `CALCULATE(SUMX(hotel_booking, hotel_booking[adr] * (hotel_booking[stays_in_weekend_nights] + hotel_booking[stays_in_week_nights])), hotel_booking[is_canceled] = 0)` |
+| **Average Price (Night)** | Average nightly room rate | `ROUND(AVERAGE(hotel_booking[adr]), 2)` |
+| **Average Nights** | Average weekend + weeknight stay length, for bookings that were not cancelled | `ROUND(CALCULATE(AVERAGEX(hotel_booking, hotel_booking[stays_in_weekend_nights] + hotel_booking[stays_in_week_nights]), hotel_booking[is_canceled] = 0), 2)` |
+| **Cancellation Rate** | Share of bookings that were cancelled | `DIVIDE(CALCULATE([Total Bookings], hotel_booking[is_canceled] = 1), [Total Bookings])` |
+| **Countries Tracked** | Number of distinct countries in the data | `DISTINCTCOUNT(hotel_booking[country])` |
+| **Top Country** | Ranks countries by traveler count, returns the top one | `VAR CountryTable = SUMMARIZE(hotel_booking, hotel_booking[country], "TravelerCount", [Total Travelers]) VAR TopRow = TOPN(1, CountryTable, [TravelerCount], DESC) RETURN MAXX(TopRow, hotel_booking[country])` |
+| **Top Room Type** | Ranks room types by booking count, returns the top one | `VAR RoomTable = SUMMARIZE(hotel_booking, hotel_booking[reserved_room_type], "RoomCount", [Total Bookings]) VAR TopRow = TOPN(1, RoomTable, [RoomCount], DESC) RETURN MAXX(TopRow, hotel_booking[reserved_room_type])` |
+| **Top Month-Year (by Bookings)** | Ranks month-year combos by booking count, returns the top one | `VAR MonthYearTable = SUMMARIZE(hotel_booking, hotel_booking[arrival_date_year], hotel_booking[arrival_date_month], "BookingCount", [Total Bookings]) VAR TopRow = TOPN(1, MonthYearTable, [BookingCount], DESC) RETURN CONCATENATEX(TopRow, hotel_booking[arrival_date_month] & " " & hotel_booking[arrival_date_year])` |
+| **Top Month-Year (by Travelers)** | Ranks month-year combos by traveler count, returns the top one | `VAR MonthYearTable = SUMMARIZE(hotel_booking, hotel_booking[arrival_date_year], hotel_booking[arrival_date_month], "TravelerCount", [Total Travelers]) VAR TopRow = TOPN(1, MonthYearTable, [TravelerCount], DESC) RETURN CONCATENATEX(TopRow, hotel_booking[arrival_date_month] & " " & hotel_booking[arrival_date_year])` |
+| **Best Customer Type - Most Bookings** | Ranks customer types by booking count, returns the top one | `VAR CustTable = SUMMARIZE(hotel_booking, hotel_booking[customer_type], "Cnt", [Total Bookings]) VAR TopRow = TOPN(1, CustTable, [Cnt], DESC) RETURN MAXX(TopRow, hotel_booking[customer_type])` |
+| **Best Customer Type - Most Reliable** | Ranks customer types by cancellation rate (ascending), returns the lowest | `VAR CustTable = SUMMARIZE(hotel_booking, hotel_booking[customer_type], "CancelRate", DIVIDE(CALCULATE([Total Bookings], hotel_booking[is_canceled] = 1), [Total Bookings])) VAR TopRow = TOPN(1, CustTable, [CancelRate], ASC) RETURN MAXX(TopRow, hotel_booking[customer_type])` |
+| **Best Customer Type - Pays Most Per Night** | Ranks customer types by average `adr`, returns the top one | `VAR CustTable = SUMMARIZE(hotel_booking, hotel_booking[customer_type], "AvgADR", AVERAGE(hotel_booking[adr])) VAR TopRow = TOPN(1, CustTable, [AvgADR], DESC) RETURN MAXX(TopRow, hotel_booking[customer_type])` |
+| **Largest Families** | Ranks customer types by combined children + babies, returns the top one | `VAR CustTable = SUMMARIZE(hotel_booking, hotel_booking[customer_type], "KidsAndBabies", SUMX(hotel_booking, hotel_booking[children] + hotel_booking[babies])) VAR TopRow = TOPN(1, CustTable, [KidsAndBabies], DESC) RETURN MAXX(TopRow, hotel_booking[customer_type])` |
+| **Market Segment With Highest Cancel Rate** | Ranks market segments (min. 50 bookings) by cancellation rate, returns the highest | `VAR SegmentTable = FILTER(SUMMARIZE(hotel_booking, hotel_booking[market_segment], "CancelRate", DIVIDE(CALCULATE([Total Bookings], hotel_booking[is_canceled] = 1), [Total Bookings]), "Bookings", [Total Bookings]), [Bookings] >= 50) VAR TopRow = TOPN(1, SegmentTable, [CancelRate], DESC) RETURN MAXX(TopRow, hotel_booking[market_segment])` |
+
+<img width="300" height="311" alt="image" src="https://github.com/user-attachments/assets/cf4b8a12-2491-492e-8481-7ec17b7dab4e" />
 
 * **Key Metric Tracking:** Created KPI cards to highlight the main business numbers, including **Total Bookings (117,399), Total Travelers (143,374), Total Revenue (€25.99M), Average Price Per Night (€103.54), Countries Tracked (178), and Cancellation Rate (37.49%).**
 
