@@ -1,6 +1,6 @@
 # Hotel Bookings Dashboard
 
-<img width="669" height="380" alt="Red Dashboard" src="https://github.com/user-attachments/assets/3166469d-5609-4cac-9369-ba3632aee690" />
+<img width="943" height="465" alt="Red Dashboard" src="https://github.com/user-attachments/assets/3166469d-5609-4cac-9369-ba3632aee690" />
 
 ### 📊 Project Overview
 
@@ -14,11 +14,11 @@ Using Power BI, I cleaned the raw booking data, built KPI measures for revenue, 
 
 ### 🕹️ Interactive Dashboard Demo
 
-See the dashboard filters, dynamic metrics, and charts in action below (31-second walkthrough): 
+See the dashboard filters, dynamic metrics, and charts in action below (60-second walkthrough): 
 
-https://github.com/user-attachments/assets/81530ff8-2165-4f2b-b1e0-98b5c2c75394
+https://github.com/user-attachments/assets/0b11f55b-bb9d-4dd1-9df1-63cc6f2a7006
 
-### To see the full live analysis: [Click here](— https://lnkd.in/p/eHB7Detb)
+### To see the full live analysis: [Click here](https://lnkd.in/p/eHB7Detb)
 
 ### 💡 Key Data Insights & Discoveries
 
@@ -28,88 +28,66 @@ https://github.com/user-attachments/assets/81530ff8-2165-4f2b-b1e0-98b5c2c75394
 
 ### 🛠️ Power BI Skills & Dashboard Setup
 
-To turn 1,465 raw Amazon product rows from one flat CSV file into clear business insights, I used Power BI's data cleaning, data modeling, DAX, and dashboard features:
+To turn 119,390 raw hotel booking rows from one Excel file into clear business insights, I used Power BI's data cleaning, DAX, and dashboard features:
 
-* **Data Cleaning & Preparation (Power Query):** Loaded the single `Amazon Sales.csv` file and cleaned it before building anything.
-  * Removed the **₹** symbol from `discounted_price` and `actual_price` and changed both to currency
-  * Removed the **%** sign from `discount_percentage`, divided it by 100, and set it as a percentage
-  * Replaced error values in `rating` and `rating_count` with 0 and fixed the data types
-  * Removed duplicate rows using `product_id`, `user_id`, and `review_id`
-  * Split the long `category` column (it used `|` between levels) into **Product Category** and **Sub Category**
+* **Data Cleaning & Preparation (Power Query):** Loaded the `Hotel bookings.xlsx` file and cleaned it before building anything.
+  * Removed bad rows: bookings with 0 adults, 0 children, and 0 babies at once; `adr` (rate) of 0 or less; and 0 total nights stayed — left with **117,399 clean rows**
+  * The personal info columns (`name`, `email`, `phone-number`, `credit_card`) in the file are artificial/fake data, so the real guest data was never exposed
+  * Added a **Month Number** calculated column, since `arrival_date_month` was stored as text (e.g. "July"), and set it as the sort-by column so charts show months in calendar order instead of alphabetical order
 
-* **Data Modeling (Star Schema):** The whole project came from only one dataset. I kept the raw file as a staging table (`Amazon_Sales Real`) and split it into one fact table and three dimension tables so the model is clean and easy to filter.
+* **Data Modeling:** Unlike a multi-entity dataset, this project came from a single flat table (`hotel_booking`) with 37 columns and no repeating dimensions like product or customer records, so there was no need to split it into a fact/dimension star schema — one clean table was the right model here. Power BI's built-in date table handles the calendar hierarchy automatically.
 
-| Table | Type | What it holds |
-|---|---|---|
-| **Fact Sales** | Fact | `product_id`, `user_id`, `review_id`, `discounted_price`, `actual_price`, `discount_percentage`, `rating`, and a calculated `Price Tier` column |
-| **Dim_Product** | Dimension | `product_id`, `product_name`, `about_product`, `product_link`, `img_link`, `Product Category`, `Sub Category` |
-| **Dim_User** | Dimension | `user_id`, `user_name` |
-| **Dim_Review** | Dimension | `review_id`, `review_title`, `review_content`, `rating_count` |
+<img width="458" height="313" alt="image" src="https://github.com/user-attachments/assets/13e3379a-2591-4d0a-aba8-e34f588fea1f" />
 
-<img width="863" height="367" alt="image" src="https://github.com/user-attachments/assets/a0bb93c4-483c-4b95-a8ca-6e88c777ebad" />
-
-* **Relationships:** Connected the fact table to each dimension with **one-to-many** relationships: `Fact Sales[product_id]` → `Dim_Product`, `Fact Sales[user_id]` → `Dim_User`, and `Fact Sales[review_id]` → `Dim_Review`.
-
-* **Price Tier Column:** Created a calculated column that groups every product into **Budget (<500), Mid-Range (500–2K), or Premium (>2K)**. This powers the Price Tier slicer and the Pricing Tier Segmentation donut.
-
-<img width="682" height="59" alt="image" src="https://github.com/user-attachments/assets/f1487819-fc04-4ca3-aa9d-5e70b9f1eff4" />
-
-* **DAX Measures:** Kept all measures in one dedicated `Measures` table so they are easy to find:
-
-<img width="244" height="244" alt="image" src="https://github.com/user-attachments/assets/dfdadd4f-6d6d-404c-8fc1-078c4700173d" />
+* **DAX Measures:** Kept all measures in one dedicated `Measures (2)` table so they are easy to find:
 
 | Measure | DAX |
 |---|---|
-| **Total Revenue** | `SUM('Fact Sales'[discounted_price])` |
-| **Total Actual Price** | `SUM('Fact Sales'[actual_price])` |
-| **Total Discount** | `[Total Actual Price] - [Total Revenue]` |
-| **Average Order Value** | `AVERAGE('Fact Sales'[discounted_price])` |
-| **Average Actual Price** | `AVERAGE('Fact Sales'[actual_price])` |
-| **Average Discounted Price** | `AVERAGE('Fact Sales'[discounted_price])` |
-| **Average Rating** | `AVERAGE('Fact Sales'[rating])` |
-| **Total Reviews** | `COUNT('Fact Sales'[review_id])` |
-| **Total Reviews Volume** | `SUM(Dim_Review[rating_count])` |
-| **Average Reviews Per Product** | `AVERAGE(Dim_Review[rating_count])` |
-| **User Engagement Count** | `DISTINCTCOUNT(Dim_Review[review_id])` |
+| **Total Bookings** | `COUNTROWS(hotel_booking)` |
+| **Total Travelers** | `CALCULATE(SUMX(hotel_booking, adults + children + babies), is_canceled = 0)` |
+| **Total Revenue** | `CALCULATE(SUMX(hotel_booking, adr * (stays_in_weekend_nights + stays_in_week_nights)), is_canceled = 0)` |
+| **Average Price (Night)** | `ROUND(AVERAGE(hotel_booking[adr]), 2)` |
+| **Average Nights** | `ROUND(CALCULATE(AVERAGEX(hotel_booking, stays_in_weekend_nights + stays_in_week_nights), is_canceled = 0), 2)` |
+| **Cancellation Rate** | `DIVIDE(CALCULATE([Total Bookings], is_canceled = 1), [Total Bookings])` |
+| **Countries Tracked** | `DISTINCTCOUNT(hotel_booking[country])` |
+| **Top Country** | Ranks countries by traveler count, returns the top one |
+| **Top Room Type** | Ranks room types by booking count, returns the top one |
+| **Top Month-Year (by Bookings)** | Ranks month-year combos by booking count, returns the top one |
+| **Top Month-Year (by Travelers)** | Ranks month-year combos by traveler count, returns the top one |
+| **Best Customer Type - Most Bookings** | Ranks customer types by booking count, returns the top one |
+| **Best Customer Type - Most Reliable** | Ranks customer types by cancellation rate (ascending), returns the lowest |
+| **Best Customer Type - Pays Most Per Night** | Ranks customer types by average `adr`, returns the top one |
+| **Largest Families** | Ranks customer types by combined children + babies, returns the top one |
+| **Market Segment With Highest Cancel Rate** | Ranks market segments (min. 50 bookings) by cancellation rate, returns the highest |
 
-* **Key Metric Tracking:** Created KPI cards to highlight the main business numbers, including **Total Revenue (₹5M), Total Actual Price (₹8M), Average Order Value (₹3K), Average Rating (4.1), Total Reviews (1K), and Total Discount (₹3.40M).**
+<img width="261" height="311" alt="image" src="https://github.com/user-attachments/assets/cf4b8a12-2491-492e-8481-7ec17b7dab4e" />
 
-You can find the image on the dashboard
+* **Key Metric Tracking:** Created KPI cards to highlight the main business numbers, including **Total Bookings (117,399), Total Travelers (143,374), Total Revenue (€25.99M), Average Price Per Night (€103.54), Countries Tracked (178), and Cancellation Rate (37.49%).**
 
-* **Chart Analysis:** Used a **scatter chart** to test if higher prices really mean better ratings, a **category performance table** to compare review volume and rating by product category, and a **donut chart** to show how revenue splits across Budget, Mid-Range, and Premium products.
+<img width="487" height="65" alt="image" src="https://github.com/user-attachments/assets/4b0dfd70-d53c-425c-952c-367afdff1079" />
 
-* **Interactive Toggle Button (Bookmarks):** Added **Product / Category** buttons on the Total Discount visual, so one space can switch between a discount-by-category bar chart and a **Product Image Table**. For the table, I set `img_link` to **Image URL** and `product_link` to **Web URL**, so the product pictures and clickable links show inside the dashboard.
+* **Chart Analysis:** Built visuals to show revenue by month (revealing the summer peak), cancellation rate by market segment (surfacing Groups as the highest-risk segment at 61.73%), and booking volume by customer type and room type.
 
-<img width="500" height="300" alt="image" src="https://github.com/user-attachments/assets/5537bc57-0358-48dd-8ce2-61272ac140af" />
+*It's all in the dashboard image*
 
-* **Interactive Slicer:** Added a **Price Tier** slicer, letting users filter the whole dashboard by Budget, Mid-Range, or Premium products.
+* **Interactive Slicers:** Added slicers so users can filter the dashboard by hotel type, arrival year, and month, to explore specific periods and compare the two hotels directly.
 
-<img width="150" height="100" alt="image" src="https://github.com/user-attachments/assets/48e7ceb9-1b97-4ee1-a076-bca86976925c" />
+<img width="200" height="100" alt="image" src="https://github.com/user-attachments/assets/d4b26bcb-c49c-40cf-acc5-7ac039f6f364" />
 
 ### 📈 Strategic Recommendations & Next Steps
 
-* **Don't put all the eggs in the Premium basket:** Almost all the money (90.84%) comes from Premium products, but they're not rated any better than cheap ones. Push Budget and Mid-Range products more instead of only relying on high prices.
-
-* **Watch the discounts on Electronics:** Electronics gets the most reviews, but it also gets the most discounts. Check if all that discounting is really needed, or if it's just cutting into profit for no reason.
-
-* **Look into why Car & Motorbike has low ratings:** This category has the lowest rating (3.8) even though it sells well. Find out what customers are unhappy about before it starts hurting the whole store's reputation.
-
-* **Add dates to the data:** Right now there's no way to see trends over time. Adding order or review dates would show if the Premium tier is growing or shrinking, instead of just one snapshot.
-
-### 📂 How to Open and Explore the Workbook
-
-1. You can download the full file here: [Retails_Sales_Dashboard.xlsx](https://github.com/DataWithMowa/E-commerce-Retail-Data-Analysis-Projects-/tree/main/Retail%20Sales%20%26%20Customer%20Demographic%20Excel%20Project/Full%20Project)
-2. Open the file locally using **Power BI desktop**.
-3. 3. Go to the **Dashboard** page.
-4. Use the Price Tier slicer on the top right side of the dashboard layout to filter the charts dynamically.
+* Reduce cancellations in the Group segment first, since it carries the highest cancellation rate at 61.73% — the single biggest source of lost revenue in the dataset.
+* Increase direct bookings to reduce dependency on channels that bring in less reliable reservations, since cancellation rate varies sharply by market segment.
+* Study what makes Resort Hotel bookings more valuable than City Hotel bookings, so that pattern can be applied across both properties.
+* Use the summer revenue peak to plan staffing and inventory ahead of time, rather than reacting to it once it starts.
 
 ### 📂 How to Open and Explore the Dashboard
 
-1. You can download the full file here: [Amazon_Ecommerce_Sales_Dashboard.pbix](https://github.com/DataWithMowa/E-commerce-Retail-Data-Analysis-Projects-/tree/main/Amazon%20E-Commerce%20Sales%20Power%20BI%20Project/Full%20Project)
+1. You can download the full file here: [Hotel_Bookings_Dashboard.pbix](https://github.com/DataWithMowa/E-commerce-Retail-Data-Analysis-Projects-/tree/main/Hotel%20Bookings/Full%20Project)
 2. Open the file locally using Power BI Desktop.
 3. Go to the Dashboard page.
-4. Use the Price Tier slicer on the top right side of the dashboard to filter all the charts by Budget, Mid-Range, or Premium.
-5. Click the Product / Category buttons on the Total Discount visual to switch between the discount-by-category chart and the Product Image Table.
+4. Use the Hotel Type, Year, and Month slicers to filter all the charts by a specific hotel, arrival year, or arrival month.
+5. Hover over the revenue and cancellation charts to compare Resort Hotel and City Hotel side by side.
 
 ### 🤝 Connect & Support
 
@@ -119,5 +97,3 @@ Thank you for taking the time to go through this project! If you have any questi
 * 📧 **Email:** [mowatheanalyst@gmail.com](mailto:mowatheanalyst@gmail.com)
 
 *📈 **Did you find this useful?** Consider giving this repository a ⭐ **Star** if it helped you!*
-
-
